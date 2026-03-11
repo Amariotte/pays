@@ -1,0 +1,38 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// modèle pour la table t_pays
+model Pays {
+  id    Int    @id @default(autoincrement()) @map("r_i")
+  nom  String @map("r_nom")
+  @@map("t_pays")
+}
+
+
+// modèle pour la table t_continent
+model Continent {
+  id    Int    @id @default(autoincrement()) @map("r_i")
+  nom  String @map("r_nom")
+  @@map("t_continent")
+}
+
+// modèle pour les utilisateurs
+model User {
+  id           Int    @id @default(autoincrement()) @map("r_i")
+  email        String @unique @map("r_email")
+  passwordHash String @map("r_passwordHash")
+  createdAt    DateTime @default(now())
+  @@map("t_user")
+}
