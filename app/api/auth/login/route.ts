@@ -39,7 +39,14 @@ export async function POST(request: Request) {
         refresh_token: refreshToken,
         token_type: 'Bearer', 
         expires_in: process.env.JWT_EXPIRATION || 3600, 
-        user: { id: user.id, email: user.email } }
+        user: { 
+          id: user.id, 
+          email: user.email, 
+          lastName : user.lastName, 
+          firstName : user.firstName,
+          birthDate : user.birthDate 
+        } 
+      }
       );
   } catch (err) {
     console.error('login error', err);

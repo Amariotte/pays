@@ -11,18 +11,29 @@ export const GET = withAuth(async (request: NextRequest): Promise<NextResponse> 
 
 
     // Récupérer l'utilisateur en base
-    const user = await prisma.user.findUnique({
+    const dbuser = await prisma.user.findUnique({
       where: { id: Number(payload.sub) },
       select: {
         id: true,
         email: true,
-        createdAt: true
+        createdAt: true,
+        lastName : true,
+        firstName : true,
+        birthDate : true,
       }
     });
 
-    if (!user) {
+    if (!dbuser) {
       return NotFound({ detail: "Utilisateur introuvable" });
     }
+
+    const user = {
+      id: dbuser.id,
+      email: dbuser.email,
+      lastName: dbuser.lastName,         
+      firstName: dbuser.firstName,
+      birthDate : dbuser.birthDate, 
+    };
 
     return NextResponse.json({ user });
 

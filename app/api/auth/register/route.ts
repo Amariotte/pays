@@ -7,7 +7,7 @@ import { BadRequest, Conflict, InternalServerError } from '../../types/problemes
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { email, password } = body;
+    const { email, password, firstName,lastName,birthDate } = body;
 
     if (!email || !password) {
       return BadRequest({ detail: 'Email and mot de passe obligatoires' });
@@ -21,7 +21,7 @@ export async function POST(request: Request) {
 
     const passwordHash = await hashPassword(password);
     const user = await prisma.user.create({
-      data: {email, passwordHash },
+      data: {email, passwordHash,firstName,lastName,birthDate },
     });
 
     const token = signToken({ sub: String(user.id), email });

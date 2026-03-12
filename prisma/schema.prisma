@@ -33,7 +33,10 @@ model User {
   id            Int            @id @default(autoincrement()) @map("r_i")
   email         String         @unique @map("r_email")
   passwordHash  String         @map("r_passwordHash")
+  lastName      String?        @map("r_lastName")
+  firstName     String?         @map("r_firstName")
   createdAt     DateTime       @default(now())
+  birthDate     DateTi?       @map("r_birthDate")
   refreshTokens RefreshToken[] // ✅ relation inverse
   @@map("t_user")
 }
