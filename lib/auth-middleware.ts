@@ -14,7 +14,10 @@ export function verifyBearerToken(request: NextRequest): { msg: string | null, p
   
   try {
     const payload = verifyToken(token);
-    return { msg: null, payload: payload };
+    if (!payload) 
+      return { msg: 'Token invalide.', payload: null };
+    else
+      return { msg: null, payload: payload };
   } catch (err) {
     return { msg: 'Token invalide.', payload: null };
   }
@@ -23,7 +26,7 @@ export function verifyBearerToken(request: NextRequest): { msg: string | null, p
 export function withAuth(handler: (request: NextRequest, context?: any) => Promise<NextResponse>) {
   return async (request: NextRequest, context?: any) => {
     const result = verifyBearerToken(request);
-    
+
     if (result.msg) {
       return Unauthorized({ detail: result.msg, instance: request.url });
     }

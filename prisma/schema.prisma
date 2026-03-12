@@ -30,9 +30,22 @@ model Continent {
 
 // modèle pour les utilisateurs
 model User {
-  id           Int    @id @default(autoincrement()) @map("r_i")
-  email        String @unique @map("r_email")
-  passwordHash String @map("r_passwordHash")
-  createdAt    DateTime @default(now())
+  id            Int            @id @default(autoincrement()) @map("r_i")
+  email         String         @unique @map("r_email")
+  passwordHash  String         @map("r_passwordHash")
+  createdAt     DateTime       @default(now())
+  refreshTokens RefreshToken[] // ✅ relation inverse
   @@map("t_user")
 }
+
+
+// modèle pour les refreshToken
+model RefreshToken {
+  id        Int      @id @default(autoincrement()) @map("r_i")
+  userId    Int      @map("r_userId")
+  user      User     @relation(fields: [userId], references: [id])
+  tokenHash String   @map("r_tokenHash") @unique
+  expiresAt DateTime 
+  @@map("t_refresh_token")
+}
+

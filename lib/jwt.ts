@@ -1,7 +1,11 @@
 import jwt from 'jsonwebtoken';
 
-const SECRET = process.env.JWT_SECRET || 'default_secret'; // ✅ fail-safe avec une valeur par défaut, mais à éviter en production
-const EXPIRES_IN = '1h'; // default expiration
+const ACCESS_SECRET = process.env.JWT_ACCESS_SECRET || "access_secret";
+const REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || "refresh_secret";
+
+const ACCESS_EXPIRES = "15m";
+const REFRESH_EXPIRES = "7d";
+
 
 export interface JWTPayload {
   sub: string; // subject (user id or similar)
@@ -9,16 +13,31 @@ export interface JWTPayload {
 }
 
 export function signToken(payload: JWTPayload, options?: jwt.SignOptions) {
-  return jwt.sign(payload, SECRET, {
-    expiresIn: EXPIRES_IN,
+  return jwt.sign(payload, ACCESS_SECRET, {
+    expiresIn: REFRESH_EXPIRES,
     ...options,
   });
 }
 
 export function verifyToken(token: string) {
   try {
-    return jwt.verify(token, SECRET) as JWTPayload;
+    return jwt.verify(token, ACCESS_SECRET) as JWTPayload;
   } catch (err) {
+    return null;
+  }
+}
+
+// REFRESH TOKEN
+export function signRefreshToken(payload: JWTPayload) {
+  return jwt.sign(payload, REFRESH_SECRET, {
+    expiresIn: REFRESH_EXPIRES
+  });
+}
+
+export function verifyRefreshToken(token: string) {
+  try {
+    return jwt.verify(token, REFRESH_SECRET) as JWTPayload;
+  } catch {
     return null;
   }
 }

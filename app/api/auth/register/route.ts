@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { hashPassword } from '@/lib/hash';
 import { signToken } from '@/lib/jwt';
-import { BadRequest, InternalServerError } from '../../types/problemes';
+import { BadRequest, Conflict, InternalServerError } from '../../types/problemes';
 
 export async function POST(request: Request) {
   try {
@@ -10,13 +10,13 @@ export async function POST(request: Request) {
     const { email, password } = body;
 
     if (!email || !password) {
-      return BadRequest({ detail: 'Email and password obligatoires' });
+      return BadRequest({ detail: 'Email and mot de passe obligatoires' });
     }
 
     // already exists?
     const existing = await prisma.user.findUnique({ where: { email } });
     if (existing) {
-      return NextResponse.json({ error: 'Email already in use' }, { status: 409 });
+      return Conflict({ detail: 'L\'email est déjà utilisé' });
     }
 
     const passwordHash = await hashPassword(password);
