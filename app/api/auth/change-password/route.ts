@@ -11,25 +11,21 @@ export const POST = withAuth(async (request: Request) => {
     const body = await request.json();
     const { oldPassword, newPassword } = body;
 
-    if (!oldPassword || !newPassword) {
+    if (!oldPassword || !newPassword)
       return BadRequest({ detail: "Ancien et nouveau mot de passe requis" });
-    }
 
-     if (oldPassword === newPassword) {
+     if (oldPassword === newPassword)
       return BadRequest({ detail: "Ancien et nouveau mot de passe doit etre différents" });
-    }
 
     // Récupérer l'utilisateur
     const user = await prisma.user.findUnique({ where: { id: Number(payload.sub) } });
-    if (!user) {
+    if (!user)
       return NotFound({ detail: "Utilisateur introuvable" });
-    }
 
     // Vérifier l'ancien mot de passe
     const isValid = await verifyPassword(oldPassword, user.passwordHash);
-    if (!isValid) {
+    if (!isValid)
       return Unauthorized({ detail: "Ancien mot de passe incorrect" });
-    }
 
     // Hasher le nouveau mot de passe
     const newPasswordHash = await hashPassword(newPassword);
