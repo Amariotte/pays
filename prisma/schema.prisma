@@ -30,13 +30,15 @@ model Continent {
 
 // modèle pour les utilisateurs
 model User {
-  id            Int            @id @default(autoincrement()) @map("r_i")
-  email         String         @unique @map("r_email")
-  passwordHash  String         @map("r_passwordHash")
-  lastName      String?        @map("r_lastName")
-  firstName     String?         @map("r_firstName")
-  createdAt     DateTime       @default(now())
-  birthDate     DateTi?       @map("r_birthDate")
+  id                   Int            @id @default(autoincrement()) @map("r_i")
+  email                String         @unique @map("r_email")
+  passwordHash         String         @map("r_passwordHash")
+  lastName             String?        @map("r_lastName")
+  firstName            String?        @map("r_firstName")
+  createdAt            DateTime       @default(now())
+  birthDate            DateTime?      @map("r_birthDate")
+  phone                String?        @map("r_phone")
+  lastPasswordUpdatedAt  DateTime?      @map("r_lastPasswordUpdatedAt")
   refreshTokens RefreshToken[] // ✅ relation inverse
   @@map("t_user")
 }
@@ -52,3 +54,56 @@ model RefreshToken {
   @@map("t_refresh_token")
 }
 
+model MessageEmail {
+  id        Int    @id @default(autoincrement()) @map("r_i")
+  to        String @map("r_to")
+  subject   String @map("r_subject")
+  content   String @map("r_content")
+  status    STATUS_MESSAGE @default(PENDING) @map("r_status")
+  error     String? @map("r_error")
+  createdAt DateTime @map("r_createdAt") @default(now())
+  sentAt    DateTime? @map("r_sentAt")
+ @@map("t_message_email")
+
+}
+
+model MessageTemplate {
+  id        Int    @id @default(autoincrement()) @map("r_i")
+  name      String @unique @map("r_name")
+  subject   String @map("r_subject")
+  content   String @map("r_content")
+  type      TYPE_MESSAGE @map("r_type")
+  plateforme PLATEFORME_MESSAGE @map("r_plateforme")
+  createdAt DateTime @default(now()) @map("r_createdAt")
+  @@map("t_message_template")
+}
+
+model SmsMessage {
+  id        Int    @id @default(autoincrement()) @map("r_i")
+  phone     String  @map("r_phone")
+  content   String @map("r_content")
+  status    STATUS_MESSAGE @default(PENDING) @map("r_status")
+  error     String? @map("r_error")
+  createdAt DateTime @default(now()) @map("r_createdAt")
+  sentAt    DateTime? @map("r_sentAt")
+  @@map("t_sms_message")
+}
+
+
+enum STATUS_MESSAGE {
+  PENDING
+  SENT
+  FAILED
+}
+
+enum TYPE_MESSAGE {
+  INSCRIPTION
+  PASSWORD_RESET
+  NOTIFICATION
+  SMS
+}
+
+enum PLATEFORME_MESSAGE {
+  EMAIL
+  SMS
+}

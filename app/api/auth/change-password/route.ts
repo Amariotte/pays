@@ -37,7 +37,7 @@ export const POST = withAuth(async (request: Request) => {
     // Mettre à jour le mot de passe
     await prisma.user.update({
       where: { id: user.id },
-      data: { passwordHash: newPasswordHash }
+      data: { passwordHash: newPasswordHash , lastPasswordUpdatedAt : new Date() },
     });
 
     return NextResponse.json({ message: "Mot de passe changé avec succès" });

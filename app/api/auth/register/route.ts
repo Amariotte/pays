@@ -3,6 +3,8 @@ import { prisma } from '@/lib/prisma';
 import { hashPassword } from '@/lib/hash';
 import { signToken } from '@/lib/jwt';
 import { BadRequest, Conflict, InternalServerError } from '../../types/problemes';
+import { PLATEFORME_MESSAGE, TYPE_MESSAGE } from '@/lib/generated/prisma/enums';
+import { templateService } from '@/services/messagerie.service';
 
 export async function POST(request: Request) {
   try {
@@ -22,6 +24,7 @@ export async function POST(request: Request) {
       data: {email, passwordHash,firstName,lastName,birthDate },
     });
 
+    // Optionnel : envoyer un email de bienvenue ici
     const token = signToken({ sub: String(user.id), email });
     return NextResponse.json({ token, user: { id: user.id, email: user.email } });
   } catch (err) {
