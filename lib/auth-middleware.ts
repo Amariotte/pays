@@ -4,11 +4,10 @@ import { Unauthorized } from '@/app/api/types/problemes';
 
 
 export function verifyBearerToken(request: NextRequest): { msg: string | null, payload: any | null } {
-  const authHeader = request.headers.get('authorization');
   
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+  const authHeader = request.headers.get('authorization');
+  if (!authHeader || !authHeader.startsWith('Bearer '))
     return { msg: 'Bearer token manquant ou invalide. Utilisez le header Authorization: Bearer <token>', payload: null };
-  }
   
   const token = authHeader.slice(7); // remove "Bearer "
   
@@ -27,10 +26,9 @@ export function withAuth(handler: (request: NextRequest, context?: any) => Promi
   return async (request: NextRequest, context?: any) => {
     const result = verifyBearerToken(request);
 
-    if (result.msg) {
+    if (result.msg)
       return Unauthorized({ detail: result.msg, instance: request.url });
-    }
-
+    
     // attach payload to request for use in handler
     (request as any).user = result.payload;
     

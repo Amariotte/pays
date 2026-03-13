@@ -9,16 +9,14 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { email, password, firstName,lastName,birthDate } = body;
 
-    if (!email || !password) {
+    if (!email || !password)
       return BadRequest({ detail: 'Email and mot de passe obligatoires' });
-    }
 
     // already exists?
     const existing = await prisma.user.findUnique({ where: { email } });
-    if (existing) {
+    if (existing)
       return Conflict({ detail: 'L\'email est déjà utilisé' });
-    }
-
+    
     const passwordHash = await hashPassword(password);
     const user = await prisma.user.create({
       data: {email, passwordHash,firstName,lastName,birthDate },

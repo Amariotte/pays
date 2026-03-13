@@ -7,8 +7,8 @@ import { InternalServerError, NotFound } from "../../types/problemes";
 
 export const GET = withAuth(async (request: NextRequest): Promise<NextResponse> => {
   try {
+    
     const payload = (request as any).user; // ← récupère le payload attaché par le middleware
-
 
     // Récupérer l'utilisateur en base
     const dbuser = await prisma.user.findUnique({
@@ -23,9 +23,8 @@ export const GET = withAuth(async (request: NextRequest): Promise<NextResponse> 
       }
     });
 
-    if (!dbuser) {
+    if (!dbuser)
       return NotFound({ detail: "Utilisateur introuvable" });
-    }
 
     const user = {
       id: dbuser.id,
