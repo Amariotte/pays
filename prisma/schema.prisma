@@ -78,7 +78,7 @@ model MessageTemplate {
   @@map("t_message_template")
 }
 
-model SmsMessage {
+model MessageSms {
   id        Int    @id @default(autoincrement()) @map("r_i")
   phone     String  @map("r_phone")
   content   String @map("r_content")
@@ -89,6 +89,24 @@ model SmsMessage {
   @@map("t_sms_message")
 }
 
+model PasswordReset {
+  id        Int    @id @default(autoincrement()) @map("r_i")
+  email      String  @map("r_email")
+  tokenHash   String @map("r_tokenHash") @unique
+  used Boolean @default(false) @map("r_used")
+  @@map("t_password_reset")
+}
+
+
+model Otp {
+  id        Int    @id @default(autoincrement()) @map("r_i")
+  otp      String  @map("r_otp")
+  createdAt DateTime @default(now()) @map("r_createdAt")
+  expiresAt DateTime @map("r_expiresAt")
+  used Boolean @default(false) @map("r_used")
+  type TYPE_OTP @map("r_type")
+  @@map("t_otp")
+}
 
 enum STATUS_MESSAGE {
   PENDING
@@ -97,6 +115,13 @@ enum STATUS_MESSAGE {
 }
 
 enum TYPE_MESSAGE {
+  INSCRIPTION
+  PASSWORD_RESET
+  NOTIFICATION
+  SMS
+}
+
+enum TYPE_OTP {
   INSCRIPTION
   PASSWORD_RESET
   NOTIFICATION

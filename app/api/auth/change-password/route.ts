@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { withAuth } from "@/lib/auth-middleware";
-import { verifyPassword, hashItem, hashPassword } from "@/lib/hash";
+import { verifyPassword, hashPassword } from "@/lib/hash";
 import { BadRequest, InternalServerError, NotFound, Unauthorized } from "../../types/problemes";
 
 export const POST = withAuth(async (request: Request) => {
